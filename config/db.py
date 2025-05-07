@@ -17,10 +17,6 @@ def get_db():
     finally:
         db.close()
 
-
-
-
-
 # Đường dẫn gốc của dự án
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
