@@ -1,33 +1,41 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
+import uuid
 from sqlalchemy.orm import Session
 from config.db import get_db
-from schemas.users import User as UserSchema, UserCreate, UserLogin
-from controller.users import create_user, get_user, get_users, authenticate_user
+from schemas.users import UserAuth
+from controller.users import create_user, authenticate_user
+from globals import sessions, api_key_header
 
 router = APIRouter(
     prefix="/users"
 )
 
-@router.get("/", response_model=list[UserSchema])
-async def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    users = get_users(db, skip=skip, limit=limit)
-    return users
-
-@router.get("/{id}", response_model=UserSchema)
-async def read_user(id: int, db: Session = Depends(get_db)):
-    user = get_user(db, user_id=id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-@router.post("/", response_model=UserSchema)
-async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
+@router.post("/register")
+async def create_user_endpoint(user: UserAuth, db: Session = Depends(get_db)):
     db_user = create_user(db, user=user)
+    if db_user is None:
+        raise HTTPException(status_code=400, detail="User already registered")
     return db_user
 
 @router.post("/login")
-async def login(user: UserLogin, db: Session = Depends(get_db)):
-    db_user = authenticate_user(db, email=user.email, password=user.password)
+async def login(user: UserAuth, db: Session = Depends(get_db)):
+    db_user = authenticate_user(db, user=user)
     if db_user is None:
         raise HTTPException(status_code=401, detail="Invalid email or password")
-    return db_user
+    session_id = str(uuid.uuid4()).replace("-", "")
+    sessions[session_id] = db_user.id
+    response = JSONResponse(content={"session_id": session_id, "isSuccess": True, "message": "Login successful"})
+    response.headers["Authorization"] = session_id
+    return response
+
+@router.post("/logout")
+async def logout(
+        session_id: str = Depends(api_key_header)
+    ):
+    if session_id is None or session_id not in sessions:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    del sessions[session_id]
+    response = JSONResponse(content={"message": "Logout successful"})
+    response.headers["Authorization"] = ""
+    return response
