@@ -1,22 +1,22 @@
 from sqlalchemy.orm import Session
-from models.models import User as UserModel
-from schemas.users import UserCreate
+from models.models import SysUser
+from schemas.users import UserAuth
 
-def create_user(db: Session, user: UserCreate):
-    db_user = UserModel(name=user.name, email=user.email, password=user.password)
+def create_user(db: Session, user: UserAuth):
+    db_user = SysUser(
+        email=user.email,
+        password=user.password,
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 def get_user(db: Session, user_id: int):
-    return db.query(UserModel).filter(UserModel.id == user_id).first()
+    return db.query(SysUser).filter(SysUser.id == user_id).first()
 
-def get_users(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(UserModel).offset(skip).limit(limit).all()
-
-def authenticate_user(db: Session, email: str, password: str):
-    db_user = db.query(UserModel).filter(UserModel.email == email).first()
-    if db_user is None or db_user.password != password:
+def authenticate_user(db: Session, user: UserAuth):
+    db_user = db.query(SysUser).filter(SysUser.email == user.email).first()
+    if db_user is None or db_user.password != user.password:
         return None
     return db_user
