@@ -1,6 +1,7 @@
 from sqlalchemy import Date, DateTime, Column, Text, DECIMAL, func, Boolean
-from sqlalchemy.types import Integer,String
+# from sqlalchemy.types import Integer,String
 from config.db import meta
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -58,6 +59,19 @@ class SysUser(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(128), nullable=False)
     password = Column(String(1024), nullable=False)
+
+class SysRole(Base):
+    __tablename__ = "SysRole"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    create_at = Column(Date, nullable=False)
+    update_at = Column(Date, nullable=False)
+
+class SysUserRole(Base):
+    __tablename__ = "SysUserRole"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    role_id = Column(Integer, nullable=False)
 
 class Cart(Base):
     __tablename__ = 'Cart'

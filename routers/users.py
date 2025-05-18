@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 import uuid
 from sqlalchemy.orm import Session
 from config.db import get_db
+from models.models import SysUser
 from schemas.users import UserAuth
 from controller.users import create_user, authenticate_user
 from globals import sessions, api_key_header
@@ -13,10 +14,13 @@ router = APIRouter(
 
 @router.post("/register")
 async def create_user_endpoint(user: UserAuth, db: Session = Depends(get_db)):
+    user_exists = db.query(SysUser).filter(SysUser.email == user.email).first()
+    if user_exists:
+        raise HTTPException(status_code=400, detail="Email is existed")
     db_user = create_user(db, user=user)
     if db_user is None:
         raise HTTPException(status_code=400, detail="User already registered")
-    return db_user
+    return {"Message: Register Successfully"}
 
 @router.post("/login")
 async def login(user: UserAuth, db: Session = Depends(get_db)):
