@@ -59,6 +59,19 @@ class SysUser(Base):
     email = Column(String(128), nullable=False)
     password = Column(String(1024), nullable=False)
 
+class SysRole(Base):
+    __tablename__ = "SysRole"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(128), nullable=False)
+    create_at = Column(Date, nullable=False)
+    update_at = Column(Date, nullable=False)
+
+class SysUserRole(Base):
+    __tablename__ = "SysUserRole"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, nullable=False)
+    role_id = Column(Integer, nullable=False)
+
 class Cart(Base):
     __tablename__ = 'Cart'
     id = Column(Integer, primary_key=True, index=True)
