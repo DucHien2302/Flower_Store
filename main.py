@@ -34,6 +34,7 @@ app.include_router(flowertype.router, tags=["Flower Types"])
 app.include_router(products.router, tags=["Products"])
 app.include_router(flowers.router, tags=["Flowers"])
 app.include_router(infomations.router, tags=["Informations"])
+app.include_router(infomations.router, tags=["SysUserRole"])
 
 # (Optional) Route gốc để kiểm tra nhanh
 @app.get("/", tags=["Root"])

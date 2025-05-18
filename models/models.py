@@ -1,6 +1,7 @@
 from sqlalchemy import Date, DateTime, Column, Text, DECIMAL, func, Boolean
-from sqlalchemy.types import Integer,String
+# from sqlalchemy.types import Integer,String
 from config.db import meta
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
