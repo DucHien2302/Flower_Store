@@ -5,8 +5,8 @@ from controller.sysuserrole import create_sysuserrole
 
 def create_user(db: Session, user: UserAuth):
     db_user = SysUser(
-        email=user.email,
-        password=user.password,
+        Email=user.email,
+        Password=user.password,
     )
     db.add(db_user)
     db.commit()
@@ -21,7 +21,7 @@ def get_user(db: Session, user_id: int):
     return db.query(SysUser).filter(SysUser.id == user_id).first()
 
 def authenticate_user(db: Session, user: UserAuth):
-    db_user = db.query(SysUser).filter(SysUser.email == user.email).first()
-    if db_user is None or db_user.password != user.password:
+    db_user = db.query(SysUser).filter(SysUser.Email == user.email).first()
+    if db_user is None or db_user.Password != user.password:
         return None
     return db_user
