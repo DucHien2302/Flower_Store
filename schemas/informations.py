@@ -5,17 +5,17 @@ class CreateInformation(BaseModel):
     first_name: str
     last_name: str
     date_of_birth: date
-    gender: bool
+    gender: str
     address: str
 
 class UpdateInformation(BaseModel):
     first_name: str
     last_name: str
     date_of_birth: date
-    gender: bool
+    gender: str
     address: str
 
-class ReponseInformation(BaseModel):
+class ResponseInformation(BaseModel):
     id: int
     first_name: str
     last_name: str

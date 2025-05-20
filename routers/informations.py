@@ -7,7 +7,7 @@ from controller.informations import create_information, update_information, get_
 from globals import sessions
 
 router = APIRouter(
-    prefix="/imformations"
+    prefix="/informations"
 )
 
 @router.get("/info")

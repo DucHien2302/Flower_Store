@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config.db import engine, Base
-from routers import users, flowertype, categories, products, flowers, infomations
+from routers import users, flowertype, categories, products, flowers, informations
 
 app = FastAPI()
 
@@ -33,8 +33,7 @@ app.include_router(categories.router,tags=["Categories"])
 app.include_router(flowertype.router, tags=["Flower Types"])
 app.include_router(products.router, tags=["Products"])
 app.include_router(flowers.router, tags=["Flowers"])
-app.include_router(infomations.router, tags=["Informations"])
-app.include_router(infomations.router, tags=["SysUserRole"])
+app.include_router(informations.router, tags=["Informations"])
 
 # (Optional) Route gốc để kiểm tra nhanh
 @app.get("/", tags=["Root"])
